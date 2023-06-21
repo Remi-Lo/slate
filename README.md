@@ -1,82 +1,67 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/slatedocs/img/main/logo-slate.png" alt="Slate: API Documentation Generator" width="226">
-  <br>
-  <a href="https://github.com/slatedocs/slate/actions?query=workflow%3ABuild+branch%3Amain"><img src="https://github.com/slatedocs/slate/workflows/Build/badge.svg?branch=main" alt="Build Status"></a>
-  <a href="https://hub.docker.com/r/slatedocs/slate"><img src="https://img.shields.io/docker/v/slatedocs/slate?sort=semver" alt="Docker Version" /></a>
-</p>
+Some contents of this chapter have been copied from the [Using Slate in Docker](https://github.com/slatedocs/slate/wiki/Using-Slate-in-Docker) documentation on the [Slate Wiki](https://github.com/slatedocs/slate/wiki). 
 
-<p align="center">Slate helps you create beautiful, intelligent, responsive API documentation.</p>
+This guide assumes you are using a Docker-supported Linux-capable system. You could for instance be running [Ubuntu](https://ubuntu.com/) in the [Windows Terminal](https://learn.microsoft.com/en-us/windows/terminal/) using [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/about) (WSL). In that case you'd be using the dropdown menu in the tab bar to change to your _Ubuntu_ terminal profile.
 
-<p align="center"><img src="https://raw.githubusercontent.com/slatedocs/img/main/screenshot-slate.png" width=700 alt="Screenshot of Example Documentation created with Slate"></p>
 
-<p align="center"><em>The example above was created with Slate. Check it out at <a href="https://slatedocs.github.io/slate">slatedocs.github.io/slate</a>.</em></p>
+# Dependencies
 
-Features
-------------
+**[Docker](https://www.docker.com/):** See [this page](https://www.docker.com/get-started) for installing Docker Desktop.
 
-* **Clean, intuitive design** — With Slate, the description of your API is on the left side of your documentation, and all the code examples are on the right side. Inspired by [Stripe's](https://stripe.com/docs/api) and [PayPal's](https://developer.paypal.com/webapps/developer/docs/api/) API docs. Slate is responsive, so it looks great on tablets, phones, and even in print.
+**Slate:**
 
-* **Everything on a single page** — Gone are the days when your users had to search through a million pages to find what they wanted. Slate puts the entire documentation on a single page. We haven't sacrificed linkability, though. As you scroll, your browser's hash will update to the nearest header, so linking to a particular point in the documentation is still natural and easy.
+1. Go to the directory where you wish to store _slate_ and the documentation files. E.g. `cd /mnt/e/`.
+2. Clone the [Slate repository](https://github.com/slatedocs) to your hard drive with `git clone https://github.com/slatedocs/slate.git`.
+   * You can also use `git clone https://github.com/Remi-Lo/slate.git` but it might be out of sync when pulling.
+   * If you intend to create a custom version of Slate:
+      * Fork the [slatedocs](https://github.com/slatedocs) repository on GitHub before cloning.
+      * Use `git clone https://github.com/YOURGITHUBUSERNAME/slate.git` when cloning to your hard-drive.
+3. Go to the _slate_ directory (`cd slate`).
+4. Grab the slate image (`docker pull slatedocs/slate`) or build the docker image for the repository (`docker build . -t slatedocs/slate`). 
+5. Go to the parent directory (`cd ..`).
 
-* **Slate is just Markdown** — When you write docs with Slate, you're just writing Markdown, which makes it simple to edit and understand. Everything is written in Markdown — even the code samples are just Markdown code blocks.
+Note: If you are using the pre-built images for Slate, you may wish to remove all files other than the `source` directory from your repository.
 
-* **Write code samples in multiple languages** — If your API has bindings in multiple programming languages, you can easily put in tabs to switch between them. In your document, you'll distinguish different languages by specifying the language name at the top of each code block, just like with GitHub Flavored Markdown.
 
-* **Out-of-the-box syntax highlighting** for [over 100 languages](https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers), no configuration required.
+# Documentation source files
 
-* **Automatic, smoothly scrolling table of contents** on the far left of the page. As you scroll, it displays your current position in the document. It's fast, too. We're using Slate at TripIt to build documentation for our new API, where our table of contents has over 180 entries. We've made sure that the performance remains excellent, even for larger documents.
+1. Go to where the _slate_ directory is stored (eg. `cd /mnt/e/`).
+2. Visit the [api_docs](https://bitbucket.org/timegrip/api_docs/) repository on the Timegrip Bitbucket
+3. Click Clone and copy the git clone command.
+4. Run the command in the terminal:
+   * E.g. `git clone https://YOURBITBUCKETUSERNAME@bitbucket.org/timegrip/api_docs.git`.
 
-* **Let your users update your documentation for you** — By default, your Slate-generated documentation is hosted in a public GitHub repository. Not only does this mean you get free hosting for your docs with GitHub Pages, but it also makes it simple for other developers to make pull requests to your docs if they find typos or other problems. Of course, if you don't want to use GitHub, you're also welcome to host your docs elsewhere.
 
-* **RTL Support** Full right-to-left layout for RTL languages such as Arabic, Persian (Farsi), Hebrew etc.
 
-Getting started with Slate is super easy! Simply press the green "use this template" button above and follow the instructions below. Or, if you'd like to check out what Slate is capable of, take a look at the [sample docs](https://slatedocs.github.io/slate/).
+# Building
 
-Getting Started with Slate
-------------------------------
+To use Docker to build your site, run the following command but modify `cd /mnt/e/` to be where the _slate_ directory is stored first (eg. `/mnt/c/containers/`):
 
-To get started with Slate, please check out the [Getting Started](https://github.com/slatedocs/slate/wiki#getting-started)
-section in our [wiki](https://github.com/slatedocs/slate/wiki).
+```
+cd /mnt/e/ & docker run --rm --name slate -v $(pwd)/slate/build:/srv/slate/build -v $(pwd)/api_docs/source:/srv/slate/source slatedocs/slate build
+```
 
-We support running Slate in three different ways:
-* [Natively](https://github.com/slatedocs/slate/wiki/Using-Slate-Natively)
-* [Using Vagrant](https://github.com/slatedocs/slate/wiki/Using-Slate-in-Vagrant)
-* [Using Docker](https://github.com/slatedocs/slate/wiki/Using-Slate-in-Docker)
+After this command completes, you should see the built artifacts for your site in the `$(pwd)/build` directory, which you can then statically serve for your website.
 
-Companies Using Slate
----------------------------------
+_Note_: You may omit the final `build` argument and get the same result. By default, if given no command, the Dockerfile will run `build`.
 
-* [NASA](https://api.nasa.gov)
-* [Sony](http://developers.cimediacloud.com)
-* [Best Buy](https://bestbuyapis.github.io/api-documentation/)
-* [Travis-CI](https://docs.travis-ci.com/api/)
-* [Greenhouse](https://developers.greenhouse.io/harvest.html)
-* [WooCommerce](http://woocommerce.github.io/woocommerce-rest-api-docs/)
-* [Dwolla](https://docs.dwolla.com/)
-* [Clearbit](https://clearbit.com/docs)
-* [Coinbase](https://developers.coinbase.com/api)
-* [Parrot Drones](http://developer.parrot.com/docs/bebop/)
-* [CoinAPI](https://docs.coinapi.io/)
 
-You can view more in [the list on the wiki](https://github.com/slatedocs/slate/wiki/Slate-in-the-Wild).
+# Running
 
-Questions? Need Help? Found a bug?
---------------------
+If you wish to run the development server for Slate to aid in working on the site, run:
 
-If you've got questions about setup, deploying, special feature implementation in your fork, or just want to chat with the developer, please feel free to [start a thread in our Discussions tab](https://github.com/slatedocs/slate/discussions)!
+```
+docker run --rm --name slate -p 4567:4567 -v $(pwd)/api_docs/source:/srv/slate/source slatedocs/slate serve
+```
 
-Found a bug with upstream Slate? Go ahead and [submit an issue](https://github.com/slatedocs/slate/issues). And, of course, feel free to submit pull requests with bug fixes or changes to the `dev` branch.
+and you will be able to access your site at http://localhost:4567 until you stop the running container process.
 
-Contributors
---------------------
 
-Slate was built by [Robert Lord](https://lord.io) while at [TripIt](https://www.tripit.com/). The project is now maintained by [Matthew Peveler](https://github.com/MasterOdin) and [Mike Ralphson](https://github.com/MikeRalphson).
+## Further reading
 
-Thanks to the following people who have submitted major pull requests:
+See the official Slate repository for:
 
-- [@chrissrogers](https://github.com/chrissrogers)
-- [@bootstraponline](https://github.com/bootstraponline)
-- [@realityking](https://github.com/realityking)
-- [@cvkef](https://github.com/cvkef)
-
-Also, thanks to [Sauce Labs](http://saucelabs.com) for sponsoring the development of the responsive styles.
+* [Usage of Slate in Docker](https://github.com/slatedocs/slate/wiki/Using-Slate-in-Docker)
+* [Advanced usage of Slate in Docker](https://github.com/slatedocs/slate/wiki/Using-Slate-in-Docker#advanced-usage)
+* [Next steps to creating documentation](https://github.com/slatedocs/slate/wiki/Using-Slate-in-Docker#what-now)
+* [An introduction to Slate](https://github.com/slatedocs/slate#readme)
+* And other Slate topics
